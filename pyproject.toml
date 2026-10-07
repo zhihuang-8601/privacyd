@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hermes-privacy-gateway"
+version = "0.1.0"
+description = "Local disclosure-control gateway (privacyd) and Hermes llm_request middleware"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+privacyd = "privacyd.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["privacyd*", "hermes_plugin*"]
+
+[tool.setuptools.package-data]
+"privacyd.storage" = ["migrations/*.sql"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

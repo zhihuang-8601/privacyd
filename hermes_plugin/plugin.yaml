@@ -1,0 +1,7 @@
+name: privacy-gateway
+version: 0.1.0
+manifest_version: 2
+api_version: 1
+license: MIT
+description: "Sends each provider request to a local privacyd sidecar before egress and forwards only what it allows. Not a complete confidentiality boundary on its own (Hermes middleware is fail-open)."
+tags: [privacy, pii, middleware]
