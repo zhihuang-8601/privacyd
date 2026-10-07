@@ -57,12 +57,34 @@ Integration test against a real Hermes source tree:
 
 No runtime dependencies beyond the Python standard library (3.10+).
 
+## Design note: the optional cloud Teacher
+
+The local part of privacyd is rule-based (pattern detectors, alias resolution, a local
+SQLite store, a disclosure policy). It does not run a language model.
+
+The optional Teacher is a cloud model that sees text that has already been scrubbed
+locally (imperfectly) and only annotates it. It does two things:
+
+- It marks spans it believes are private. The gateway turns them into local aliases and
+  assigns the placeholders itself; the Teacher never writes outbound text.
+- It suggests which kind of data a task type may need, at which disclosure level. These
+  suggestions are recorded as `shadow` rules and can move shadow → candidate → validated →
+  active only through a deliberate local action backed by enough evidence; activation needs
+  an explicit approver, and high-risk levels need the user's class approval. The cloud can
+  never change a rule by itself.
+
+The point of this stage is learning, not a finished protection boundary. Because the text
+sent to the Teacher can still carry residual personal context, the Teacher should only be
+used with a provider that offers zero data retention. A local-model backend for the Teacher
+is future work; today the Teacher needs a cloud model.
+
 ## Not done yet
 
 - A hard egress proxy that only forwards requests carrying a valid `clearance_id`.
 - Verifying whether all of Hermes' auxiliary model calls pass through the middleware.
 - Container deployment where Hermes and privacyd run separately.
-- A Teacher adapter for Claude (currently OpenAI-compatible only).
+- A Claude Teacher adapter (currently OpenAI-compatible endpoints only), and an optional
+  local-model backend for the Teacher.
 
 ## Credits
 
